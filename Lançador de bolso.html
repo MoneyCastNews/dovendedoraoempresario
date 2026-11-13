@@ -1,0 +1,215 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Lançador de bolso</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Layout: uma coluna estreita pensada para o celular; entrada rápida no topo, lista no meio, botão de copiar sempre à vista no rodapé. */
+:root{--bg:#F6F2FC;--surface:#FFFFFF;--soft:#EAE3F7;--ink:#13164A;--muted:#6B6590;--line:#D3C8EA;--accent:#6A57B5;--on-accent:#FFFFFF;--navy:#1F2766;--good:#1B7F4B;--warn:#B45309;--bad:#9B1C1C;
+  --serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12142E;--surface:#1B1E45;--soft:#262A5C;--ink:#ECE9FA;--muted:#A9A3CC;--line:#34386B;--accent:#A99BEB;--on-accent:#12142E;--navy:#C3B6F0;--good:#5FD39A;--warn:#F0B35C;--bad:#F2A0A0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12142E;--surface:#1B1E45;--soft:#262A5C;--ink:#ECE9FA;--muted:#A9A3CC;--line:#34386B;--accent:#A99BEB;--on-accent:#12142E;--navy:#C3B6F0;--good:#5FD39A;--warn:#F0B35C;--bad:#F2A0A0;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.4;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:20px 120px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.05;margin:0;color:var(--navy);text-wrap:balance}
+h1 em{color:var(--accent)}
+.sub{margin:4px 0 0;color:var(--muted);font-size:14px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--soft);padding:4px;border-radius:12px}
+.seg button{border:0;background:none;color:var(--muted);font:inherit;font-weight:700;padding:10px;border-radius:9px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(19,22,74,.15)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:500}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0;width:100%}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.entry{display:grid;grid-template-columns:1fr auto;gap:8px}
+.big{font-size:18px;padding:14px}
+.btn{font:inherit;font-weight:700;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:12px 16px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.mic[aria-pressed="true"]{background:var(--warn);color:#fff;border-color:var(--warn)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 96px 32px;gap:6px;align-items:center;padding-block:8px;border-bottom:1px solid var(--line)}
+.row .sels{grid-column:1 / 3;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.row.sent .d,.row.sent .v{opacity:.55}
+.x{border:0;background:none;color:var(--muted);font-size:22px;line-height:1;border-radius:8px;padding:4px}
+.x:hover{color:var(--bad)}
+.tag{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--good)}
+.sum{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--muted)}
+.sum b{color:var(--ink);font-variant-numeric:tabular-nums}
+.tip{font-size:13px;color:var(--muted);margin:0}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:12px max(16px,env(safe-area-inset-left,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px))}
+.bar .in{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:6px}
+.bar .btn{width:100%;font-size:17px;padding:14px}
+.msg{min-height:1.2em;font-size:13px;color:var(--muted);text-align:center}
+.opt{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.opt label{display:flex;align-items:center;gap:6px}
+.opt input{width:auto}
+textarea{width:100%;min-height:90px;font:12px/1.4 ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg);color:var(--ink)}
+.clear{align-self:center;border:0;background:none;color:var(--muted);text-decoration:underline;font:inherit;font-size:13px;padding:6px}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Lançador <em>de bolso</em></h1>
+    <p class="sub">Escreva ou dite o gasto, confira a categoria e copie as linhas para o Excel.</p>
+  </header>
+
+  <div class="seg" role="group" aria-label="Tipo de lançamento">
+    <button type="button" id="mEmp" aria-pressed="true">Empresa</button>
+    <button type="button" id="mCasa" aria-pressed="false">Casa</button>
+  </div>
+
+  <section class="card" aria-label="Novo lançamento">
+    <label class="f" for="mes">Mês dos lançamentos<input type="month" id="mes"></label>
+    <div class="entry">
+      <input class="big" id="txt" type="text" inputmode="text" enterkeyhint="done" autocomplete="off" aria-label="Descrição e valor" placeholder="combustível 200">
+      <button class="btn pri" id="add" type="button">Adicionar</button>
+    </div>
+    <div class="entry" id="micRow" hidden>
+      <button class="btn mic" id="mic" type="button" aria-pressed="false">Falar</button>
+      <span></span>
+    </div>
+    <p class="tip" id="tip">Vários de uma vez: "pedágio 120 e almoço 60". Dica: para ditar, toque no microfone do teclado do celular.</p>
+  </section>
+
+  <section class="card" aria-label="Lançamentos do mês">
+    <div id="list"></div>
+    <div class="sum" id="sum"></div>
+  </section>
+
+  <section class="card" aria-label="Opções de cópia">
+    <div class="opt">
+      <label><input type="checkbox" id="vir" checked> Decimal com vírgula (Excel em português)</label>
+    </div>
+    <p class="tip">As linhas saem como Mês, Descrição, Valor, Categoria e Tipo, na mesma ordem da aba Custos da planilha. Cole na primeira linha vazia.</p>
+    <div id="fb" hidden><textarea id="fbt" readonly aria-label="Linhas para copiar"></textarea><p class="tip">Seu navegador não permitiu copiar sozinho. Selecione o texto acima e copie.</p></div>
+    <button class="clear" id="all" type="button">Copiar todos do mês, inclusive os já copiados</button>
+    <button class="clear" id="wipe" type="button">Apagar os lançamentos já copiados</button>
+  </section>
+</div>
+
+<div class="bar"><div class="in">
+  <button class="btn pri" id="copy" type="button">Copiar lançamentos novos</button>
+  <div class="msg" id="msg" role="status" aria-live="polite"></div>
+</div></div>
+
+<script>
+(function(){
+var KEY='lancador-bolso-v1';
+function $(i){return document.getElementById(i);}
+function cur(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2);}
+var EMP=[
+ {k:'Combustível',b:'Ocasional',w:['combustivel','gasolina','etanol','diesel','posto','abasteci']},
+ {k:'Pedágio',b:'Ocasional',w:['pedagio','sem parar']},
+ {k:'Estacionamento',b:'Ocasional',w:['estacionamento','zona azul','garagem','valet']},
+ {k:'Alimentação enquanto trabalha',b:'Ocasional',w:['almoco','refeicao','lanche','restaurante','alimentacao','cafe','janta']},
+ {k:'Amostras e material',b:'Ocasional',w:['amostra','material','brinde','catalogo','impressao']},
+ {k:'Carro: parcela, seguro e IPVA',b:'Fixo',w:['parcela','seguro','ipva','licenciamento','financiamento','carro']},
+ {k:'Pneus e manutenção',b:'Fixo',w:['pneu','manutencao','oficina','revisao','troca de oleo','lavagem','mecanico']},
+ {k:'Celular e internet',b:'Fixo',w:['celular','internet','telefone','plano']},
+ {k:'CRM e software',b:'Fixo',w:['crm','software','sistema','app','assinatura','aplicativo']},
+ {k:'Contador',b:'Fixo',w:['contador','contabilidade','honorario','honorarios']},
+ {k:'Eventos com fabricantes e redes',b:'Fixo',w:['evento','feira','congresso','patrocinio','convencao']},
+ {k:'Marketing',b:'Fixo',w:['marketing','anuncio','publicidade','cartao de visita','site']},
+ {k:'Outros (revise)',b:'Fixo',w:[]}];
+var CASA=[
+ {k:'Moradia',b:'Essencial',w:['aluguel','condominio','iptu','reforma','financiamento']},
+ {k:'Saúde',b:'Essencial',w:['plano de saude','plano saude','medico','farmacia','remedio','dentista','consulta','exame']},
+ {k:'Educação',b:'Essencial',w:['escola','faculdade','curso','colegio','creche','material escolar','mensalidade']},
+ {k:'Transporte',b:'Essencial',w:['gasolina','combustivel','uber','onibus','metro','estacionamento']},
+ {k:'Alimentação',b:'Essencial',w:['mercado','supermercado','feira','padaria','acougue','hortifruti']},
+ {k:'Contas da casa',b:'Essencial',w:['luz','energia','agua','gas','internet','celular','telefone','conta']},
+ {k:'Lazer',b:'Lazer',w:['restaurante','bar','cinema','netflix','streaming','spotify','ifood','delivery','lanche','cerveja','festa','show','jogo','academia','hobby','pizza','passeio']},
+ {k:'Viagens',b:'Lazer',w:['viagem','hotel','passagem','pousada','ferias']},
+ {k:'Roupas e presentes',b:'Lazer',w:['roupa','sapato','tenis','presente','shopping','perfume']},
+ {k:'Outros (revise)',b:'Lazer',w:[]}];
+var S={modo:'emp',mes:cur(),vir:true,l:[]};
+try{var raw=JSON.parse(localStorage.getItem(KEY)||'null');if(raw&&raw.l){S=raw;S.mes=S.mes||cur();}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function cats(){return S.modo==='emp'?EMP:CASA;}
+function tipos(){return S.modo==='emp'?['Fixo','Ocasional']:['Essencial','Lazer'];}
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();}
+function guess(txt,list){var n=' '+norm(txt)+' ',tk=n.trim().split(' ');
+  for(var i=0;i<list.length;i++){var w=list[i].w;for(var j=0;j<w.length;j++){
+    if(w[j].indexOf(' ')>0){if(n.indexOf(' '+w[j]+' ')>=0)return list[i];}
+    else if(tk.some(function(t){return t===w[j]||t===w[j]+'s'||t===w[j]+'es';}))return list[i];}}
+  return list[list.length-1];}
+function lastNum(s){var re=/(\d{1,3}(?:\.\d{3})+|\d+)(?:,(\d{1,2}))?/g,m,l=null;while((m=re.exec(s)))l={v:parseFloat(m[1].replace(/\./g,'')+'.'+(m[2]||'0')),i:m.index,n:m[0].length};return l;}
+function parse(text){
+  var parts=text.split(/;|\n|\s+e\s+/i),buf='',out=[],list=cats();
+  parts.forEach(function(p){buf=buf?buf+' e '+p:p;var n=lastNum(buf);if(n){
+    var d=(buf.slice(0,n.i)+' '+buf.slice(n.i+n.n)).replace(/r\$|reais|real/ig,' ').replace(/\b(gastei|paguei|comprei|gasto|de|do|da|no|na|em|com)\b/ig,' ').replace(/[,.:;]+/g,' ').replace(/\s+/g,' ').trim();
+    if(!d)d=S.modo==='emp'?'Custo':'Gasto';d=d.charAt(0).toUpperCase()+d.slice(1).replace(/\b(crm|ipva|iptu)\b/gi,function(x){return x.toUpperCase();});
+    var c=guess(buf,list);out.push({id:Date.now()+Math.random(),o:S.modo,m:S.mes,t:d,v:n.v,c:c.k,k:c.b,sent:false});buf='';}});
+  return out;}
+function brl(v){return 'R$ '+Math.round(v).toLocaleString('pt-BR');}
+function msg(t){$('msg').textContent=t;}
+function mine(){return S.l.filter(function(x){return x.o===S.modo&&x.m===S.mes;});}
+function render(){
+  $('mEmp').setAttribute('aria-pressed',S.modo==='emp');$('mCasa').setAttribute('aria-pressed',S.modo!=='emp');
+  $('mes').value=S.mes;$('vir').checked=!!S.vir;
+  $('txt').placeholder=S.modo==='emp'?'combustível 200':'mercado 350';
+  var box=$('list');box.innerHTML='';var rows=mine(),t={};
+  if(!rows.length){var p=document.createElement('p');p.className='tip';p.textContent='Nenhum lançamento neste mês. Escreva o primeiro acima.';box.appendChild(p);}
+  rows.forEach(function(x){
+    var r=document.createElement('div');r.className='row'+(x.sent?' sent':'');
+    var d=document.createElement('input');d.className='d';d.value=x.t;d.setAttribute('aria-label','Descrição');d.oninput=function(){x.t=d.value;save();};
+    var v=document.createElement('input');v.className='v';v.type='number';v.min='0';v.step='10';v.inputMode='decimal';v.value=x.v;v.setAttribute('aria-label','Valor em reais');v.oninput=function(){x.v=parseFloat(v.value)||0;x.sent=false;save();sum();};
+    var b=document.createElement('button');b.className='x';b.type='button';b.textContent='×';b.setAttribute('aria-label','Remover');b.onclick=function(){S.l.splice(S.l.indexOf(x),1);save();render();};
+    var s=document.createElement('div');s.className='sels';
+    var c=document.createElement('select');c.setAttribute('aria-label','Categoria');c.innerHTML=cats().map(function(k){return '<option>'+k.k+'</option>';}).join('');c.value=x.c;
+    var tp=document.createElement('select');tp.setAttribute('aria-label','Tipo');tp.innerHTML=tipos().map(function(k){return '<option>'+k+'</option>';}).join('');tp.value=x.k;
+    c.onchange=function(){x.c=c.value;var f=cats().filter(function(k){return k.k===x.c})[0];if(f){x.k=f.b;tp.value=x.k;}x.sent=false;save();};
+    tp.onchange=function(){x.k=tp.value;x.sent=false;save();sum();};
+    s.appendChild(c);s.appendChild(tp);
+    r.appendChild(d);r.appendChild(v);r.appendChild(b);r.appendChild(s);
+    if(x.sent){var g=document.createElement('span');g.className='tag';g.textContent='copiado';r.appendChild(g);}
+    box.appendChild(r);
+  });
+  sum();updBtn();
+}
+function sum(){
+  var rows=mine(),t={},tot=0;rows.forEach(function(x){t[x.k]=(t[x.k]||0)+(x.v||0);tot+=x.v||0;});
+  $('sum').innerHTML='<span>Total do mês <b>'+brl(tot)+'</b></span>'+tipos().map(function(k){return '<span>'+k+' <b>'+brl(t[k]||0)+'</b></span>';}).join('');
+}
+function updBtn(){var n=mine().filter(function(x){return !x.sent;}).length;$('copy').textContent=n?'Copiar '+n+(n>1?' lançamentos novos':' lançamento novo'):'Nada novo para copiar';}
+function add(){var t=$('txt').value.trim();if(!t)return;var es=parse(t);
+  if(!es.length){msg('Não achei o valor. Escreva assim: '+(S.modo==='emp'?'combustível 200':'mercado 350'));return;}
+  es.forEach(function(e){S.l.push(e);});$('txt').value='';save();render();msg(es.length+(es.length>1?' lançamentos adicionados.':' lançamento adicionado.'));$('txt').focus();}
+function lines(rows){return rows.map(function(x){var v=(Math.round((x.v||0)*100)/100).toFixed(2);if(S.vir)v=v.replace('.',',');
+  return [x.m+'-01',x.t.replace(/\t/g,' '),v,x.c,x.k].join('\t');}).join('\n');}
+function copy(rows,label){
+  if(!rows.length){msg('Nada para copiar.');return;}
+  var txt=lines(rows);
+  function done(){rows.forEach(function(x){x.sent=true;});save();render();msg(rows.length+(rows.length>1?' linhas copiadas.':' linha copiada.')+' Cole na primeira linha vazia da planilha.');$('fb').hidden=true;}
+  function fb(){$('fb').hidden=false;var t=$('fbt');t.value=txt;t.focus();t.select();msg('Selecione e copie o texto da caixa abaixo.');}
+  try{navigator.clipboard.writeText(txt).then(done,fb);}catch(e){fb();}
+}
+$('add').onclick=add;
+$('txt').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();add();}};
+$('mes').onchange=function(){if(/^\d{4}-\d{2}$/.test(this.value)){S.mes=this.value;save();render();}};
+$('vir').onchange=function(){S.vir=this.checked;save();};
+$('mEmp').onclick=function(){S.modo='emp';save();render();};
+$('mCasa').onclick=function(){S.modo='casa';save();render();};
+$('copy').onclick=function(){copy(mine().filter(function(x){return !x.sent;}));};
+$('all').onclick=function(){copy(mine());};
+$('wipe').onclick=function(){var n=S.l.filter(function(x){return x.o===S.modo&&x.m===S.mes&&x.sent;}).length;
+  if(!n){msg('Não há lançamentos copiados neste mês.');return;}
+  if($('wipe').dataset.ok!=='1'){$('wipe').dataset.ok='1';$('wipe').textContent='Toque de novo para apagar '+n+' já copiados';setTimeout(function(){$('wipe').dataset.ok='';$('wipe').textContent='Apagar os lançamentos já copiados';},4000);return;}
+  S.l=S.l.filter(function(x){return !(x.o===S.modo&&x.m===S.mes&&x.sent);});$('wipe').dataset.ok='';$('wipe').textContent='Apagar os lançamentos já copiados';save();render();msg('Apagados.');};
+(function(){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return;
+  var rc=null,on=false,b=$('mic');$('micRow').hidden=false;
+  function off(){on=false;b.textContent='Falar';b.setAttribute('aria-pressed','false');}
+  b.onclick=function(){
+    if(on){try{rc.stop();}catch(e){}off();return;}
+    try{rc=new SR();}catch(e){return;}
+    rc.lang='pt-BR';rc.continuous=true;rc.interimResults=false;
+    rc.onresult=function(ev){for(var i=ev.resultIndex;i<ev.results.length;i++){if(ev.results[i].isFinal){$('txt').value=ev.results[i][0].transcript;add();}}};
+    rc.onerror=function(){msg('O microfone não está disponível aqui. Use o microfone do teclado do celular.');off();};
+    rc.onend=off;
+    try{rc.start();on=true;b.textContent='Parar de ouvir';b.setAttribute('aria-pressed','true');}catch(e){off();}};
+})();
+render();
+})();
+</script>
+
+</body></html>
